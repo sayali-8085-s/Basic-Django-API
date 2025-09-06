@@ -76,9 +76,40 @@ def stu_list(req):
         s = StudentSerializer(x, many=True)
         return JsonResponse(s.data, safe=False)
 
+#  DLT WITH URL ID
+# @csrf_exempt   # 👈 detail view pe bhi lagana padega agar POST/PUT karna hai
+# def stu_detail(req ,pk):
+#      if req.method == "DELETE":
+#         id=pk
+#         x = Student.objects.get(id=id)
+#         x.delete()
+#         return JsonResponse({"message": "Student deleted successfully"})
+
+# DLT WITH BODY.REQ
 
 @csrf_exempt   # 👈 detail view pe bhi lagana padega agar POST/PUT karna hai
-def stu_detail(req, pk):
-    x = Student.objects.get(id=pk)
-    s = StudentSerializer(x)
-    return JsonResponse(s.data, safe=False)
+def stu_detail(req  ):
+     if req.method == "DELETE":
+          json_data = req.body
+          py_data =json.loads(json_data)
+          print("Request Body JSON:", py_data)
+          id = int(py_data.get('id'))
+          print(id)
+          x = Student.objects.get(id=id)
+          x.delete()
+          return JsonResponse({"message": "object deleted successfully"})
+     elif req.method == 'PATCH':
+          x = Student.objects.get(id=3)
+          p_data = json.loads(req.body)
+          x.name =p_data['name']
+          x.save()
+          return JsonResponse({"message": "object partial updated successfully"})
+         
+     elif req.method == 'PUT':
+          x = Student.objects.get(id=3)
+          p_data = json.loads(req.body)
+          x.name =p_data['name']
+          x.save()
+          return JsonResponse({"message": "object updated successfully"})
+
+
