@@ -109,6 +109,7 @@ def stu_detail(req  ):
           x = Student.objects.get(id=3)
           p_data = json.loads(req.body)
           x.name =p_data['name']
+          
           x.save()
           return JsonResponse({"message": "object updated successfully"})
 
